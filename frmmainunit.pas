@@ -95,7 +95,6 @@ begin
        CommandLine := '/usr/bin/open '+ Get_Output_Filename(ebProjectFile.Text);      //@003=
    //    Showmessage(CommandLine);
        {$ENDIF}
-       {$IFDEF WIN32}
        // In Windows, we just run DOT to process the file into a PNG file.
        CommandLine := '"'+ GraphViz_exe_get +'" -Tpng '
                        + Get_Output_Filename(ebProjectFile.Text)
@@ -104,12 +103,9 @@ begin
                         ;
        //Writeln(CommandLine);
 
-       {$ENDIF}
-
        Options := Options + [poWaitOnExit];
        execute;
 
-       {$IFDEF WIN32}  // we use our custom output display if in windows
        {$IFDEF INTERNALVIEWER}
        If FileExistsUTF8(Get_PNG_Filename(ebProjectFile.Text)) then        //@006+
           with FrmOutputUnit.frmOutput do
@@ -123,15 +119,15 @@ begin
           end
           else
             Showmessage('Output PNG file could not be located.');
-     end;
          {$ELSE} // or use START command to launch system default PNG viewer
 
+         {$IFDEF WIN32}  // we use our custom output display if in windows
           CommandLine := 'cmd /c start '
                        + Get_PNG_Filename(ebProjectFile.Text)
                         ;
           execute;
+          {$ENDIF} // of IF windows
           {$ENDIF} //of if custom viewer
-      {$ENDIF} // of IF windows
        // Linux should perhaps be handled the same way as Windows.
        // (Depends if there is a decent native viewer already or not).
 
@@ -159,4 +155,4 @@ end;
 
 
 end.
-
+

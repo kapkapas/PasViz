@@ -284,8 +284,12 @@ procedure GraphViz_exe_set(const exepath:UTF8String);                           
     {$IFDEF WIN32}
     ConfigKey='gvexe_win32';
     {$ENDIF}
-    {$IFDEF DARWIN}
-    ConfigKey= 'gvexe_darwin';
+    {$IFDEF UNIX}
+      {$IFDEF DARWIN}
+      ConfigKey= 'gvexe_darwin';
+      {$ELSE}
+      ConfigKey= '/usr/bin/dot';
+      {$ENDIF}
     {$ENDIF}
   begin
     XMLConfig.SetValue(ConfigKey, exepath)
@@ -339,4 +343,4 @@ finalization
 //  DebugLn('libPasViz.Finalization End');
 
 end.
-
+
